@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATM Simulator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="atm-container">
+        <div class="atm-screen">
+            <!-- Welcome Screen -->
+            <div id="welcome-screen" class="screen active">
+                <div class="screen-header">
+                    <h1><i class="fas fa-university"></i> SecureBank ATM</h1>
+                    <p class="subtitle">Welcome to your trusted banking partner</p>
+                </div>
+                <div class="welcome-content">
+                    <div class="welcome-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <h2>Insert Your Card</h2>
+                    <p>Please insert your card to begin</p>
+                    <button class="btn btn-primary" onclick="showPinScreen()">
+                        <i class="fas fa-arrow-right"></i> Continue
+                    </button>
+                </div>
+            </div>
+
+            <!-- PIN Entry Screen -->
+            <div id="pin-screen" class="screen">
+                <div class="screen-header">
+                    <h2><i class="fas fa-lock"></i> Enter PIN</h2>
+                    <p>Please enter your 4-digit PIN</p>
+                </div>
+                <div class="pin-container">
+                    <div class="pin-display">
+                        <span id="pin-dots"></span>
+                    </div>
+                    <div class="pin-keypad">
+                        <div class="keypad-row">
+                            <button class="key-btn" onclick="addPin('1')">1</button>
+                            <button class="key-btn" onclick="addPin('2')">2</button>
+                            <button class="key-btn" onclick="addPin('3')">3</button>
+                        </div>
+                        <div class="keypad-row">
+                            <button class="key-btn" onclick="addPin('4')">4</button>
+                            <button class="key-btn" onclick="addPin('5')">5</button>
+                            <button class="key-btn" onclick="addPin('6')">6</button>
+                        </div>
+                        <div class="keypad-row">
+                            <button class="key-btn" onclick="addPin('7')">7</button>
+                            <button class="key-btn" onclick="addPin('8')">8</button>
+                            <button class="key-btn" onclick="addPin('9')">9</button>
+                        </div>
+                        <div class="keypad-row">
+                            <button class="key-btn clear" onclick="clearPin()">
+                                <i class="fas fa-backspace"></i>
+                            </button>
+                            <button class="key-btn" onclick="addPin('0')">0</button>
+                            <button class="key-btn enter" onclick="validatePin()">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Menu Screen -->
+            <div id="menu-screen" class="screen">
+                <div class="screen-header">
+                    <h2><i class="fas fa-user-circle"></i> Welcome, John Doe</h2>
+                    <p>Select a transaction</p>
+                </div>
+                <div class="menu-options">
+                    <button class="menu-btn" onclick="showTransactionScreen('withdraw')">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Withdraw Cash</span>
+                    </button>
+                    <button class="menu-btn" onclick="showTransactionScreen('deposit')">
+                        <i class="fas fa-piggy-bank"></i>
+                        <span>Deposit Cash</span>
+                    </button>
+                    <button class="menu-btn" onclick="showBalanceScreen()">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Check Balance</span>
+                    </button>
+                    <button class="menu-btn" onclick="showTransactionScreen('transfer')">
+                        <i class="fas fa-exchange-alt"></i>
+                        <span>Transfer Money</span>
+                    </button>
+                </div>
+                <button class="btn btn-secondary logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+
+            <!-- Transaction Screen -->
+            <div id="transaction-screen" class="screen">
+                <div class="screen-header">
+                    <h2 id="transaction-title"><i class="fas fa-money-bill-wave"></i> Withdraw Cash</h2>
+                    <p>Current Balance: $<span id="current-balance">5,250.00</span></p>
+                </div>
+                <div class="transaction-content">
+                    <div class="amount-options">
+                        <button class="amount-btn" onclick="selectAmount(20)">$20</button>
+                        <button class="amount-btn" onclick="selectAmount(50)">$50</button>
+                        <button class="amount-btn" onclick="selectAmount(100)">$100</button>
+                        <button class="amount-btn" onclick="selectAmount(200)">$200</button>
+                        <button class="amount-btn" onclick="selectAmount(500)">$500</button>
+                        <button class="amount-btn custom" onclick="showCustomAmount()">Other Amount</button>
+                    </div>
+                    <div id="custom-amount-input" class="custom-amount-container" style="display: none;">
+                        <input type="number" id="custom-amount" placeholder="Enter amount" min="1" max="1000">
+                        <button class="btn btn-primary" onclick="selectCustomAmount()">Confirm</button>
+                    </div>
+                </div>
+                <div class="transaction-actions">
+                    <button class="btn btn-secondary" onclick="showMenuScreen()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+            </div>
+
+            <!-- Balance Screen -->
+            <div id="balance-screen" class="screen">
+                <div class="screen-header">
+                    <h2><i class="fas fa-chart-line"></i> Account Balance</h2>
+                </div>
+                <div class="balance-content">
+                    <div class="balance-card">
+                        <div class="balance-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <h3>Available Balance</h3>
+                        <div class="balance-amount">$<span id="balance-amount">5,250.00</span></div>
+                        <div class="account-info">
+                            <p>Account: ****-****-****-1234</p>
+                            <p>Last Updated: <span id="last-updated"></span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="balance-actions">
+                    <button class="btn btn-primary" onclick="printReceipt('balance')">
+                        <i class="fas fa-print"></i> Print Receipt
+                    </button>
+                    <button class="btn btn-secondary" onclick="showMenuScreen()">
+                        <i class="fas fa-arrow-left"></i> Back to Menu
+                    </button>
+                </div>
+            </div>
+
+            <!-- Processing Screen -->
+            <div id="processing-screen" class="screen">
+                <div class="processing-content">
+                    <div class="spinner"></div>
+                    <h2>Processing Transaction...</h2>
+                    <p>Please wait while we process your request</p>
+                </div>
+            </div>
+
+            <!-- Receipt Screen -->
+            <div id="receipt-screen" class="screen">
+                <div class="screen-header">
+                    <h2><i class="fas fa-receipt"></i> Transaction Receipt</h2>
+                </div>
+                <div class="receipt-content">
+                    <div class="receipt">
+                        <div class="receipt-header">
+                            <h3>SecureBank ATM</h3>
+                            <p>123 Main Street, City, State 12345</p>
+                            <p>Phone: (555) 123-4567</p>
+                        </div>
+                        <div class="receipt-details">
+                            <div class="receipt-row">
+                                <span>Transaction Type:</span>
+                                <span id="receipt-type">Withdrawal</span>
+                            </div>
+                            <div class="receipt-row">
+                                <span>Amount:</span>
+                                <span id="receipt-amount">$100.00</span>
+                            </div>
+                            <div class="receipt-row">
+                                <span>Date:</span>
+                                <span id="receipt-date"></span>
+                            </div>
+                            <div class="receipt-row">
+                                <span>Time:</span>
+                                <span id="receipt-time"></span>
+                            </div>
+                            <div class="receipt-row">
+                                <span>Transaction ID:</span>
+                                <span id="receipt-id"></span>
+                            </div>
+                            <div class="receipt-row">
+                                <span>Account:</span>
+                                <span>****-****-****-1234</span>
+                            </div>
+                            <div class="receipt-row balance-row">
+                                <span>Available Balance:</span>
+                                <span id="receipt-balance">$5,150.00</span>
+                            </div>
+                        </div>
+                        <div class="qr-section">
+                            <h4>Scan for Digital Receipt</h4>
+                            <div id="qr-code"></div>
+                            <p class="qr-instruction">Scan this QR code to view your digital receipt</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="receipt-actions">
+                    <button class="btn btn-primary" onclick="newTransaction()">
+                        <i class="fas fa-plus"></i> New Transaction
+                    </button>
+                    <button class="btn btn-secondary" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+
+            <!-- Error Screen -->
+            <div id="error-screen" class="screen">
+                <div class="error-content">
+                    <div class="error-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h2 id="error-title">Transaction Error</h2>
+                    <p id="error-message">An error occurred while processing your transaction.</p>
+                    <button class="btn btn-primary" onclick="showMenuScreen()">
+                        <i class="fas fa-home"></i> Return to Menu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
